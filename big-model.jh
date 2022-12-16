@@ -1,0 +1,339 @@
+DEFAULT_MIN_LENGTH = 25
+DEFAULT_MAX_LENGTH = 64
+DEFAULT_ZIP_LENGTH = 15
+URL_MAX_LENGTH = 2048
+EMAIL_MAX_LENGTH = 256
+COMMENTS_MAX_LENGTH = 1024
+TEXT_MAX_LENGTH = 4096
+PATH_MAX_LENGTH = 256
+DEFAULT_MIN = 0
+DEFAULT_MAX = 999
+
+entity Company {
+	name String maxlength(DEFAULT_MAX_LENGTH),
+    webPage String maxlength(DEFAULT_MAX_LENGTH),
+    note TextBlob
+}
+
+entity Customer {
+	id Integer required,
+	lastName String maxlength(DEFAULT_MAX_LENGTH),
+	firstName String maxlength(DEFAULT_MAX_LENGTH),
+	emailAddress String maxlength(DEFAULT_MAX_LENGTH),
+	jobTitle String maxlength(DEFAULT_MAX_LENGTH),
+	businessPhone String maxlength(DEFAULT_MIN_LENGTH),
+	homePhone String maxlength(DEFAULT_MIN_LENGTH),
+	mobilePhone String maxlength(DEFAULT_MIN_LENGTH),
+	faxNumber String maxlength(DEFAULT_MIN_LENGTH),
+	webPage TextBlob,
+	note TextBlob
+}
+
+entity Employee {
+	id Integer required,
+	lastName String maxlength(DEFAULT_MAX_LENGTH),
+	firstName String maxlength(DEFAULT_MAX_LENGTH),
+	emailAddress String maxlength(DEFAULT_MAX_LENGTH),
+	jobTitle String maxlength(DEFAULT_MAX_LENGTH),
+	businessPhone String maxlength(DEFAULT_MIN_LENGTH),
+	homePhone String maxlength(DEFAULT_MIN_LENGTH),
+	mobilePhone String maxlength(DEFAULT_MIN_LENGTH),
+	faxNumber String maxlength(DEFAULT_MIN_LENGTH),
+	webPage TextBlob,
+	note TextBlob
+}
+
+entity InventoryTransactionType {
+	id Boolean required,
+	typeName String required maxlength(DEFAULT_MAX_LENGTH)
+}
+
+entity InventoryTransaction {
+	id Integer required,
+	transactionCreatedDate Instant,
+	transactionModifiedDate Instant,
+	quantity Integer required,
+	comments String maxlength(COMMENTS_MAX_LENGTH)
+}
+
+entity Invoice {
+	id Integer required,
+	invoiceDate Instant,
+	dueDate Instant,
+	tax BigDecimal,
+	shipping BigDecimal,
+	amountDue BigDecimal
+}
+
+entity DetailOrder {
+	id Integer required,
+	quantity BigDecimal required,
+	unitPrice BigDecimal,
+	discount Double required,
+	dateAllocated Instant,
+	purchaseOrderId Integer,
+	inventoryId Integer,
+    dateReceived Instant,
+	postedToInventory Boolean required
+}
+
+entity State {
+	id Integer required,
+	statusName String required maxlength(DEFAULT_MAX_LENGTH)
+}
+
+entity InternalOrder {
+	id Integer required,
+	orderDate Instant,
+	shippedDate Instant,
+	shippingFee BigDecimal,
+	taxes BigDecimal,
+	paymentType String maxlength(DEFAULT_MAX_LENGTH),
+	paidDate Instant,
+	notes TextBlob,
+	taxRate Double
+}
+
+entity Product {
+	supplierIds TextBlob,
+	id Integer required,
+    title String required maxlength(DEFAULT_MAX_LENGTH) required,
+    keywords String maxlength(DEFAULT_MAX_LENGTH),
+	productCode String maxlength(DEFAULT_MIN_LENGTH),
+	productName String maxlength(DEFAULT_MAX_LENGTH),
+	description TextBlob,
+	standardCost BigDecimal,
+	listPrice BigDecimal required,
+	reorderLevel Integer,
+	targetLevel Integer,
+	quantityPerUnit String maxlength(DEFAULT_MAX_LENGTH),
+	discontinued Boolean required,
+	minimumReorderQuantity Integer,
+	category String maxlength(DEFAULT_MAX_LENGTH),
+	attachments Blob,
+    rating Integer,
+    dateAdded LocalDate,
+    dateModified LocalDate
+}
+
+entity PurchaseOrder {
+	id Integer required,
+	submittedDate Instant,
+	creationDate Instant,
+	expectedDate Instant,
+	shippingFee BigDecimal required,
+	taxes BigDecimal required,
+	paymentDate Instant,
+	paymentAmount BigDecimal,
+	paymentMethod String maxlength(DEFAULT_MAX_LENGTH),
+	note TextBlob,
+	approvedBy Integer,
+	approvedDate Instant,
+	submittedBy Integer
+}
+
+entity SalesReport {
+	groupBy String required maxlength(DEFAULT_MAX_LENGTH),
+	display String maxlength(DEFAULT_MAX_LENGTH),
+	title String maxlength(DEFAULT_MAX_LENGTH),
+	filterRowSource TextBlob,
+	defaultFlag Boolean required
+}
+
+entity Shipper {
+	id Integer required,
+	company String maxlength(DEFAULT_MAX_LENGTH),
+	lastName String maxlength(DEFAULT_MAX_LENGTH),
+	firstName String maxlength(DEFAULT_MAX_LENGTH),
+	emailAddress String maxlength(DEFAULT_MAX_LENGTH),
+	jobTitle String maxlength(DEFAULT_MAX_LENGTH),
+	businessPhone String maxlength(25),
+	homePhone String maxlength(25),
+	mobilePhone String maxlength(25),
+	faxNumber String maxlength(25),
+	webPage TextBlob,
+	notes TextBlob,
+	attachments Blob
+}
+
+entity Strings {
+	stringId Integer required,
+	stringData TextBlob
+}
+
+entity Supplier {
+	id Integer required,
+	lastName String maxlength(DEFAULT_MAX_LENGTH),
+	firstName String maxlength(DEFAULT_MAX_LENGTH),
+	emailAddress String maxlength(DEFAULT_MAX_LENGTH),
+	jobTitle String maxlength(DEFAULT_MAX_LENGTH),
+	businessPhone String maxlength(25),
+	homePhone String maxlength(25),
+	mobilePhone String maxlength(25),
+	faxNumber String maxlength(25),
+	webPage TextBlob,
+	notes TextBlob,
+	attachments Blob
+}
+
+
+
+entity Profile {
+  name String required maxlength(DEFAULT_MAX_LENGTH)
+  location String maxlength(DEFAULT_MAX_LENGTH)
+  status ProfileStatus required
+  avatarPath String maxlength(PATH_MAX_LENGTH)
+  photoPath String maxlength(PATH_MAX_LENGTH)
+  description String maxlength(TEXT_MAX_LENGTH)
+  email String unique required minlength(5) maxlength(EMAIL_MAX_LENGTH) pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)
+  github String maxlength(URL_MAX_LENGTH)
+  linkedin String maxlength(URL_MAX_LENGTH)
+  twitter String maxlength(URL_MAX_LENGTH)
+  createdBy Long required min(DEFAULT_MIN)  // Id of User.
+  createdDt Instant required
+  modifiedBy Long min(DEFAULT_MIN)  // Id of User.
+  modifiedDt Instant
+}
+
+enum ProfileStatus {
+  AVAILABLE, UNAVAILABLE
+}
+
+entity Project {
+  name String required maxlength(DEFAULT_MAX_LENGTH)
+  url String required maxlength(URL_MAX_LENGTH)
+}
+
+entity Skill {
+  level SkillLevel required
+  skill String maxlength(DEFAULT_MAX_LENGTH)
+  description String maxlength(TEXT_MAX_LENGTH)
+}
+
+enum SkillLevel {
+  NONE, CORE, PROFICIENT, FAMILIAR, PROFESSIONAL
+}
+
+entity SkillCategory {
+  category String required maxlength(DEFAULT_MAX_LENGTH)
+}
+
+entity Career {
+  step Integer required min(DEFAULT_MIN) max(DEFAULT_MAX)
+  description String required maxlength(DEFAULT_MAX_LENGTH)
+  synopsis String maxlength(TEXT_MAX_LENGTH)
+}
+
+entity Interest {
+  title String required maxlength(DEFAULT_MAX_LENGTH)
+  imagePath String maxlength(PATH_MAX_LENGTH)
+  description String maxlength(TEXT_MAX_LENGTH)
+}
+
+
+
+
+enum CategoryStatus {
+    AVAILABLE, RESTRICTED, DISABLED
+}
+
+entity Category {
+    description String required,
+    sortOrder Integer,
+    dateAdded LocalDate,
+    dateModified LocalDate,
+    status CategoryStatus
+}
+
+entity Address {
+    address1 String,
+    address2 String,
+    city String,
+    postcode String required maxlength(10),
+    state String maxlength(20),
+    country String required maxlength(2)
+}
+
+entity WishList {
+	title String required,
+    restricted Boolean
+}
+
+
+entity Blog {
+  name String required minlength(3)
+  handle String required minlength(2)
+}
+
+entity Entry {
+  title String required
+  content TextBlob required
+  date Instant required
+}
+
+entity Image {
+	title String required,
+    content ImageBlob required,
+    type String required
+}
+
+entity Tag {
+  name String required minlength(2)
+}
+
+relationship ManyToOne {
+  Blog{user(login)} to User,
+  Entry{blog(name)} to Blog,
+  Category{parent} to Category,
+  Profile{profile(login)} to User
+}
+
+relationship OneToMany {
+	Image{tags} to Tag,
+    Entry{strings(id)} to Strings,
+    Product{articles(id)} to Entry,
+    Customer{wishList(title)} to WishList{customer},
+    Customer{invoices} to Invoice,
+    WishList{product(title)} to Product{wishList},
+    Customer{address(id)} to Address{customer},
+    Shipper{address(id)} to Address{customer},
+    Shipper{invoices} to Invoice,
+    Employee{work} to Company{employees},
+    Profile to Project,
+    Employee to Skill,
+    Employee to Career,
+    Employee to Project,
+    Profile{career} to Career,
+    Profile to Interest,
+    SkillCategory to Skill,
+
+    Invoice{orderDetail(id)} to DetailOrder{on(id)},
+    PurchaseOrder{details(id)} to DetailOrder{for(id)},
+    InternalOrder{details(id)} to DetailOrder{for(id)},
+    DetailOrder{state(id)} to State{for(id)},
+
+    Invoice{transaction(id)} to InventoryTransaction,
+    Supplier to Company,
+    SalesReport{invoices(id)} to Invoice,
+    SalesReport{products(id)} to Product
+}
+
+relationship ManyToMany {
+	Entry{tag(name)} to Tag{entry},
+	Category{product(title)} to Product{category}
+}
+
+relationship OneToOne {
+	Employee{profile(id)} to Profile{employment},
+    Invoice{from(id)} to Company{to(id)},
+    InventoryTransaction to InventoryTransactionType,
+    Profile{customer(id)} to Customer,
+    Profile{shipper(id)} to Shipper,
+}
+
+paginate Customer, Product, Category with pagination
+paginate Address with pagination
+paginate Product with infinite-scroll
+paginate Entry, Tag with infinite-scroll
+
+service Category with serviceClass
